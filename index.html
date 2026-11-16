@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Absensi">
+<meta name="theme-color" content="#3b82f6">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Absensi Karyawan</title>
+<style>
+:root{--g1:#14b8a6;--g2:#3b82f6;--g3:#7c3aed;--ink:#0f172a;--mut:#64748b;--line:#e2e8f0;--bg:#f5f7fb;--ok:#16a34a;--bad:#dc2626;--r:18px}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.hidden{display:none!important}
+.grad{background:linear-gradient(135deg,var(--g1),var(--g2) 55%,var(--g3))}
+h1{font-size:22px;margin:0 0 6px}
+label{display:block;font-size:13px;color:var(--mut);margin:12px 0 6px;font-weight:600}
+input,select{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:12px;font:inherit;background:#fff}
+input:focus,select:focus{outline:2px solid var(--g2);outline-offset:1px}
+button{font:inherit;cursor:pointer;border:0}
+.btn-big{width:100%;padding:18px;border-radius:16px;color:#fff;font-size:17px;font-weight:700;margin-top:14px;background:linear-gradient(135deg,var(--g1),var(--g2) 55%,var(--g3));box-shadow:0 12px 26px rgba(59,130,246,.28)}
+.btn-big:disabled{background:#cbd5e1;box-shadow:none;cursor:not-allowed}
+.btn-sm{padding:12px 16px;border-radius:12px;color:#fff;font-weight:700;background:var(--g2)}
+.ghost{background:rgba(255,255,255,.2);color:#fff;padding:9px 14px;border-radius:999px;font-weight:700}
+.sub{color:var(--mut);font-size:14px;margin:0 0 6px}
+.err{color:var(--bad);font-size:13px;min-height:18px;margin:10px 0 0}
+.muted{color:var(--mut);font-size:13px}
+.row{display:flex;gap:10px;align-items:center}
+.row-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+/* login */
+#view-login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(160deg,#ecfeff,#f5f3ff)}
+.card-login{width:100%;max-width:420px;background:#fff;border-radius:24px;padding:28px 22px;box-shadow:0 20px 50px rgba(15,23,42,.12)}
+.logo{width:68px;height:68px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center}
+.logo svg{width:34px;height:34px}
+/* app */
+header.top{color:#fff;padding:calc(18px + env(safe-area-inset-top)) 18px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.hi{font-size:19px;font-weight:800}
+.sub2{font-size:13px;opacity:.9;margin-top:2px}
+main{padding:16px 16px 96px;max-width:560px;margin:0 auto}
+.card{background:#fff;border-radius:var(--r);padding:16px;margin-top:12px;box-shadow:0 6px 20px rgba(15,23,42,.06)}
+.steps{list-style:none;margin:0;padding:0}
+.steps li{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.steps li:first-child{border-top:0}
+.dot{width:14px;height:14px;border-radius:50%;background:#cbd5e1;flex:0 0 14px}
+.steps li.done .dot{background:var(--ok)}
+.steps li.next .dot{background:var(--g2);box-shadow:0 0 0 5px #dbeafe}
+.st{display:flex;flex-direction:column}
+.st small{color:var(--mut);margin-top:2px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+.stats div{background:#f8fafc;border-radius:12px;padding:10px;text-align:center}
+.stats b{display:block;font-size:15px}
+.stats small{color:var(--mut);font-size:11px}
+details{margin-top:8px}
+summary{cursor:pointer;color:var(--g2);font-weight:700;font-size:14px}
+.drow{display:grid;grid-template-columns:.6fr 1fr 1fr 1fr 1fr 1.6fr;gap:4px;font-size:12px;padding:6px 0;border-top:1px solid var(--line)}
+.drow.head{font-weight:700;color:var(--mut);border-top:0}
+.note{font-size:12px;color:var(--mut);text-align:center;margin-top:14px;line-height:1.5}
+/* bawah */
+nav.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;padding:8px 8px calc(8px + env(safe-area-inset-bottom))}
+nav.bottom button{background:none;color:var(--mut);padding:10px;border-radius:12px;font-weight:700}
+nav.bottom button.on{color:var(--g2);background:#eff6ff}
+/* modal & toast */
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.6);display:grid;place-items:center;padding:16px;z-index:50}
+.sheet{background:#fff;border-radius:22px;padding:18px;width:100%;max-width:420px}
+.sheet img{width:100%;border-radius:14px;margin:10px 0;display:block}
+.ghost-d{background:#f1f5f9;color:var(--ink);padding:12px 16px;border-radius:12px;font-weight:700}
+.toast{position:fixed;left:16px;right:16px;bottom:88px;max-width:520px;margin:0 auto;background:var(--ink);color:#fff;padding:14px 16px;border-radius:14px;font-size:14px;z-index:60;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.toast.err{background:var(--bad)}
+</style>
+</head>
+<body>
+
+<section id="view-login">
+  <div class="card-login">
+    <div class="logo grad">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+    </div>
+    <h1 style="text-align:center">Absensi Karyawan</h1>
+    <p class="sub" style="text-align:center">Masukkan alamat Apps Script dan kata sandi tim.</p>
+    <form id="login-form">
+      <label for="login-url">Alamat Apps Script (berakhiran /exec)</label>
+      <input id="login-url" type="url" placeholder="https://script.google.com/macros/s/.../exec" required>
+      <label for="login-token">Kata sandi</label>
+      <input id="login-token" type="password" required>
+      <p class="err" id="login-err"></p>
+      <button class="btn-big" type="submit" id="login-btn">Masuk</button>
+    </form>
+  </div>
+</section>
+
+<div id="app" class="hidden">
+  <header class="top grad">
+    <div>
+      <div class="hi">Absensi Karyawan</div>
+      <div class="sub2" id="tgl-label"></div>
+    </div>
+    <button class="ghost" id="logout">Keluar</button>
+  </header>
+
+  <main>
+    <section id="view-absen">
+      <div class="card">
+        <label for="nama" style="margin-top:0">Nama Anda</label>
+        <select id="nama"></select>
+      </div>
+      <div class="card">
+        <div class="row-h"><b>Hari ini</b><span class="muted" id="jam-now"></span></div>
+        <ol class="steps" id="steps"></ol>
+      </div>
+      <button class="btn-big" id="btn-aksi" disabled>Pilih nama dulu</button>
+      <p class="note">Foto dan lokasi dicatat setiap kali absen. Absen hanya bisa dilakukan di area kantor. Pastikan GPS dan internet aktif.</p>
+    </section>
+
+    <section id="view-rekap" class="hidden">
+      <div class="card">
+        <label for="bulan" style="margin-top:0">Bulan</label>
+        <div class="row">
+          <input type="month" id="bulan">
+          <button class="btn-sm" id="btn-rekap">Muat</button>
+        </div>
+      </div>
+      <div id="rekap"></div>
+    </section>
+  </main>
+
+  <nav class="bottom">
+    <button data-view="absen" class="on">Absen</button>
+    <button data-view="rekap">Rekap</button>
+  </nav>
+</div>
+
+<input type="file" id="foto" accept="image/*" capture="user" class="hidden">
+
+<div id="modal" class="modal hidden">
+  <div class="sheet">
+    <h3 id="m-title" style="margin:0">Konfirmasi absen</h3>
+    <img id="m-img" alt="Pratinjau foto">
+    <p class="muted" id="m-info"></p>
+    <div class="row" style="justify-content:flex-end">
+      <button class="ghost-d" id="m-batal">Batal</button>
+      <button class="btn-sm" id="m-kirim">Kirim</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="app.js"></script>
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');</script>
+</body>
+</html>
